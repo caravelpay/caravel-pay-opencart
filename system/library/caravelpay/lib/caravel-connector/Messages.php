@@ -206,7 +206,7 @@ final class Messages
         }
         $notes = array();
         foreach ($payouts as $payout) {
-            $link = Urls::explorer($payout['tx_hash']);
+            $link = Urls::explorer($payout['tx_hash'], null, isset($payout['asset']) ? $payout['asset'] : null);
             $notes[] = $this->render('note.payout', array($payout['amount'], $payout['asset'], $link !== '' ? $link : $payout['tx_hash']));
         }
         return implode(' ', $notes);

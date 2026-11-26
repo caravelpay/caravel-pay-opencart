@@ -8,7 +8,7 @@
  */
 
 if (!defined('CARAVEL_CONNECTOR_VERSION')) {
-    define('CARAVEL_CONNECTOR_VERSION', '1.2.1');
+    define('CARAVEL_CONNECTOR_VERSION', '1.2.2');
 }
 
 $caravelSdkAutoload = dirname(__DIR__) . '/caravel-php/autoload.php';

@@ -78,7 +78,7 @@ class Caravelpay extends \Opencart\System\Engine\Controller
         }
     }
 
-    /** AJAX from the button: make the order real (Pending), then start the hosted checkout. */
+    /** AJAX from the button: start the hosted checkout, then make the order real (Pending). */
     public function confirm(): void
     {
         $this->load->language('extension/caravelpay/payment/caravelpay');
@@ -96,9 +96,6 @@ class Caravelpay extends \Opencart\System\Engine\Controller
             if (!$order) {
                 $json['error'] = $this->language->get('error_order');
             } else {
-                if ((int) $order['order_status_id'] === 0) {
-                    $this->model_checkout_order->addHistory($orderId, (int) ($this->config->get('payment_caravelpay_pending_status_id') ?: 1));
-                }
                 $language = (string) $this->config->get('config_language');
                 $service = self::serviceFor($this->registry);
                 $result = $service->starter($this->orders())->withFeeMode($this->config->get('payment_caravelpay_fee_mode'))->withFxBuffer($this->config->get('payment_caravelpay_fx_buffer'))->start(
@@ -108,6 +105,9 @@ class Caravelpay extends \Opencart\System\Engine\Controller
                     Service::callbackUrls(HTTP_SERVER, $language)[0]
                 );
                 if ($result->ok()) {
+                    if ((int) $order['order_status_id'] === 0) {
+                        $this->model_checkout_order->addHistory($orderId, (int) ($this->config->get('payment_caravelpay_pending_status_id') ?: 1));
+                    }
                     $json['redirect'] = $result->redirect;
                 } else {
                     $json['error'] = $service->messages->render($result->error);

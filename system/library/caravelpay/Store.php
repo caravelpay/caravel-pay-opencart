@@ -146,16 +146,27 @@ class Store
         return $map;
     }
 
-    /** A MySQL named lock per order. */
+    /** A MySQL named lock per order (43 chars: always within MySQL 5.7+/8.0's 64-char limit). */
     public function lock($orderId)
     {
-        $query = $this->db->query("SELECT GET_LOCK('" . $this->db->escape(DB_DATABASE . '.caravelpay.' . (int) $orderId) . "', 0) AS `locked`");
+        $query = $this->db->query("SELECT GET_LOCK('" . $this->db->escape(self::lockName($orderId)) . "', 0) AS `locked`");
         return (int) $query->row['locked'] === 1;
     }
 
     public function unlock($orderId)
     {
-        $this->db->query("SELECT RELEASE_LOCK('" . $this->db->escape(DB_DATABASE . '.caravelpay.' . (int) $orderId) . "') AS `released`");
+        $this->db->query("SELECT RELEASE_LOCK('" . $this->db->escape(self::lockName($orderId)) . "') AS `released`");
+    }
+
+    /**
+     * @param int         $orderId Order id.
+     * @param string|null $dbName  Database name (defaults to DB_DATABASE).
+     * @return string
+     */
+    public static function lockName($orderId, $dbName = null)
+    {
+        $db = $dbName !== null ? (string) $dbName : (string) DB_DATABASE;
+        return 'caravelpay_' . substr(hash('sha256', $db . ':' . (int) $orderId), 0, 32);
     }
 
     public function eventSeen($eventId)

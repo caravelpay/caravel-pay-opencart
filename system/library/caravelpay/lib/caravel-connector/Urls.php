@@ -147,15 +147,34 @@ final class Urls
     }
 
     /**
-     * Block-explorer link for a Polygon transaction ('' when malformed).
+     * Block-explorer link for a payout transaction ('' when malformed).
+     * Defaults to Etherscan for Ethereum payout assets (PYUSD, USDT, ETH) and Polygonscan otherwise.
      *
-     * @param string $txHash Hash.
-     * @param string $prefix Explorer prefix.
+     * @param string      $txHash Hash.
+     * @param string|null $prefix Explorer prefix override (or payout asset ticker when $asset is omitted).
+     * @param string|null $asset  Payout asset (e.g. USDC, PYUSD, USDT, ETH).
      * @return string
      */
-    public static function explorer($txHash, $prefix = 'https://polygonscan.com/tx/')
+    public static function explorer($txHash, $prefix = null, $asset = null)
     {
-        return is_string($txHash) && preg_match('/^0x[0-9a-fA-F]{64}$/D', $txHash) ? $prefix . strtolower($txHash) : '';
+        if (!is_string($txHash) || !preg_match('/^0x[0-9a-fA-F]{64}$/D', $txHash)) {
+            return '';
+        }
+        if (is_string($prefix) && $prefix !== '') {
+            if (($asset === null || $asset === '') && preg_match('/^[A-Za-z][A-Za-z0-9.]{0,15}$/D', trim($prefix))) {
+                $asset = $prefix;
+                $prefix = null;
+            }
+        } else {
+            $prefix = null;
+        }
+        if ($prefix === null) {
+            $normalized = is_string($asset) ? strtoupper(trim($asset)) : '';
+            $prefix = in_array($normalized, array('PYUSD', 'USDT', 'ETH'), true)
+                ? 'https://etherscan.io/tx/'
+                : 'https://polygonscan.com/tx/';
+        }
+        return $prefix . strtolower($txHash);
     }
 
     /**

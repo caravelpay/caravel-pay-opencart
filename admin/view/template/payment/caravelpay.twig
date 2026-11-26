@@ -3,94 +3,94 @@
   <div class="page-header">
     <div class="container-fluid">
       <div class="float-end">
-        <button type="submit" form="form-payment" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
-        <button type="submit" form="form-payment" formaction="{{ reconnect }}" data-bs-toggle="tooltip" title="{{ button_reconnect }}" class="btn btn-outline-primary"><i class="fa-solid fa-rotate"></i></button>
-        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
+        <button type="submit" form="form-payment" data-bs-toggle="tooltip" title="{{ button_save|e('html_attr') }}" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i></button>
+        <button type="submit" form="form-payment" formaction="{{ reconnect }}" data-bs-toggle="tooltip" title="{{ button_reconnect|e('html_attr') }}" class="btn btn-outline-primary"><i class="fa-solid fa-rotate"></i></button>
+        <a href="{{ back }}" data-bs-toggle="tooltip" title="{{ button_back|e('html_attr') }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a>
       </div>
-      <h1>{{ heading_title }}</h1>
+      <h1>{{ heading_title|e }}</h1>
       <ol class="breadcrumb">
         {% for breadcrumb in breadcrumbs %}
-          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+          <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text|e }}</a></li>
         {% endfor %}
       </ol>
     </div>
   </div>
   <div class="container-fluid">
     <div class="card mb-3">
-      <div class="card-header"><i class="fa-solid fa-link"></i> {{ text_status }}</div>
+      <div class="card-header"><i class="fa-solid fa-link"></i> {{ text_status|e }}</div>
       <div class="card-body">
         <p class="mb-1">
-          <span class="badge {% if caravel_state == 'connected' %}bg-success{% elseif caravel_state == 'not_connected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ caravel_label }}</span>
-          {{ caravel_detail }}
+          <span class="badge {% if caravel_state == 'connected' %}bg-success{% elseif caravel_state == 'not_connected' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ caravel_label|e }}</span>
+          {{ caravel_detail|e }}
         </p>
-        {% if caravel_hint %}<p class="form-text mb-1">{{ caravel_hint }}</p>{% endif %}
-        <p class="form-text mb-1">{{ text_usd_only }}</p>
-        <p class="form-text mb-0">{{ text_webhook }} <code>{{ webhook_url }}</code></p>
+        {% if caravel_hint %}<p class="form-text mb-1">{{ caravel_hint|e }}</p>{% endif %}
+        <p class="form-text mb-1">{{ text_usd_only|e }}</p>
+        <p class="form-text mb-0">{{ text_webhook|e }} <code>{{ webhook_url|e }}</code></p>
       </div>
     </div>
     <div class="card">
-      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit|e }}</div>
       <div class="card-body">
-        <p>{{ text_intro }}</p>
+        <p>{{ text_intro|e }}</p>
         <form id="form-payment" action="{{ save }}" method="post" data-oc-toggle="ajax">
           <div class="row mb-3 required">
-            <label for="input-wallet" class="col-sm-2 col-form-label">{{ entry_wallet }}</label>
+            <label for="input-wallet" class="col-sm-2 col-form-label">{{ entry_wallet|e }}</label>
             <div class="col-sm-10">
-              <input type="text" name="payment_caravelpay_wallet" value="{{ payment_caravelpay_wallet }}" placeholder="0x…" id="input-wallet" class="form-control" autocomplete="off" spellcheck="false"/>
+              <input type="text" name="payment_caravelpay_wallet" value="{{ payment_caravelpay_wallet|e('html_attr') }}" placeholder="0x…" id="input-wallet" class="form-control" autocomplete="off" spellcheck="false"/>
               <div id="error-wallet" class="invalid-feedback"></div>
-              <div class="form-text">{{ help_wallet }}</div>
+              <div class="form-text">{{ help_wallet|e }}</div>
             </div>
           </div>
           <div class="row mb-3">
-            <label for="input-title" class="col-sm-2 col-form-label">{{ entry_title }}</label>
+            <label for="input-title" class="col-sm-2 col-form-label">{{ entry_title|e }}</label>
             <div class="col-sm-10">
-              <input type="text" name="payment_caravelpay_title" value="{{ payment_caravelpay_title }}" id="input-title" class="form-control"/>
-              <div class="form-text">{{ help_title }}</div>
+              <input type="text" name="payment_caravelpay_title" value="{{ payment_caravelpay_title|e('html_attr') }}" id="input-title" class="form-control"/>
+              <div class="form-text">{{ help_title|e }}</div>
             </div>
           </div>
           <div class="row mb-3">
-            <label for="input-fee-mode" class="col-sm-2 col-form-label">{{ entry_fee_mode }}</label>
+            <label for="input-fee-mode" class="col-sm-2 col-form-label">{{ entry_fee_mode|e }}</label>
             <div class="col-sm-10">
               <select name="payment_caravelpay_fee_mode" id="input-fee-mode" class="form-select">
                 {% for mode, label in fee_modes %}
-                  <option value="{{ mode }}"{% if mode == payment_caravelpay_fee_mode %} selected{% endif %}>{{ label }}</option>
+                  <option value="{{ mode|e('html_attr') }}"{% if mode == payment_caravelpay_fee_mode %} selected{% endif %}>{{ label|e }}</option>
                 {% endfor %}
               </select>
-              <div class="form-text">{{ help_fee_mode }}</div>
+              <div class="form-text">{{ help_fee_mode|e }}</div>
             </div>
           </div>
           <div class="row mb-3">
-            <label for="input-fx-buffer" class="col-sm-2 col-form-label">{{ entry_fx_buffer }}</label>
+            <label for="input-fx-buffer" class="col-sm-2 col-form-label">{{ entry_fx_buffer|e }}</label>
             <div class="col-sm-10">
-              <input type="text" name="payment_caravelpay_fx_buffer" value="{{ payment_caravelpay_fx_buffer }}" id="input-fx-buffer" class="form-control" style="max-width: 8em;">
-              <div class="form-text">{{ help_fx_buffer }}</div>
+              <input type="text" name="payment_caravelpay_fx_buffer" value="{{ payment_caravelpay_fx_buffer|e('html_attr') }}" id="input-fx-buffer" class="form-control" style="max-width: 8em;">
+              <div class="form-text">{{ help_fx_buffer|e }}</div>
             </div>
           </div>
           {% for key, label in {'pending_status_id': entry_pending_status, 'paid_status_id': entry_paid_status, 'hold_status_id': entry_hold_status, 'expired_status_id': entry_expired_status} %}
             <div class="row mb-3">
-              <label for="input-{{ key }}" class="col-sm-2 col-form-label">{{ label }}</label>
+              <label for="input-{{ key }}" class="col-sm-2 col-form-label">{{ label|e }}</label>
               <div class="col-sm-10">
                 <select name="payment_caravelpay_{{ key }}" id="input-{{ key }}" class="form-select">
                   {% for order_status in order_statuses %}
-                    <option value="{{ order_status.order_status_id }}"{% if order_status.order_status_id == attribute(_context, 'payment_caravelpay_' ~ key) %} selected{% endif %}>{{ order_status.name }}</option>
+                    <option value="{{ order_status.order_status_id|e('html_attr') }}"{% if order_status.order_status_id == attribute(_context, 'payment_caravelpay_' ~ key) %} selected{% endif %}>{{ order_status.name|e }}</option>
                   {% endfor %}
                 </select>
               </div>
             </div>
           {% endfor %}
           <div class="row mb-3">
-            <label for="input-geo-zone" class="col-sm-2 col-form-label">{{ entry_geo_zone }}</label>
+            <label for="input-geo-zone" class="col-sm-2 col-form-label">{{ entry_geo_zone|e }}</label>
             <div class="col-sm-10">
               <select name="payment_caravelpay_geo_zone_id" id="input-geo-zone" class="form-select">
-                <option value="0">{{ text_all_zones }}</option>
+                <option value="0">{{ text_all_zones|e }}</option>
                 {% for geo_zone in geo_zones %}
-                  <option value="{{ geo_zone.geo_zone_id }}"{% if geo_zone.geo_zone_id == payment_caravelpay_geo_zone_id %} selected{% endif %}>{{ geo_zone.name }}</option>
+                  <option value="{{ geo_zone.geo_zone_id|e('html_attr') }}"{% if geo_zone.geo_zone_id == payment_caravelpay_geo_zone_id %} selected{% endif %}>{{ geo_zone.name|e }}</option>
                 {% endfor %}
               </select>
             </div>
           </div>
           <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">{{ entry_status }}</label>
+            <label class="col-sm-2 col-form-label">{{ entry_status|e }}</label>
             <div class="col-sm-10">
               <div class="form-check form-switch form-switch-lg">
                 <input type="hidden" name="payment_caravelpay_status" value="0"/>
@@ -99,9 +99,9 @@
             </div>
           </div>
           <div class="row mb-3">
-            <label for="input-sort-order" class="col-sm-2 col-form-label">{{ entry_sort_order }}</label>
+            <label for="input-sort-order" class="col-sm-2 col-form-label">{{ entry_sort_order|e }}</label>
             <div class="col-sm-10">
-              <input type="text" name="payment_caravelpay_sort_order" value="{{ payment_caravelpay_sort_order }}" id="input-sort-order" class="form-control"/>
+              <input type="text" name="payment_caravelpay_sort_order" value="{{ payment_caravelpay_sort_order|e('html_attr') }}" id="input-sort-order" class="form-control"/>
             </div>
           </div>
         </form>

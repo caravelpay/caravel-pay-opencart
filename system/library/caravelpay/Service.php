@@ -17,7 +17,7 @@ use CaravelPay\Connector\WebhookProcessor;
  */
 class Service implements EventLog
 {
-    const VERSION = '1.2.1';
+    const VERSION = '1.2.2';
     const ROUTE = 'extension/caravelpay/payment/caravelpay';
 
     /** @var Store */
